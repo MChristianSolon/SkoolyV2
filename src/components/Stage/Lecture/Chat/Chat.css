@@ -1,0 +1,13 @@
+.chat {
+  position: relative;
+  height: 100%;
+}
+
+.chat__textField {
+  position: absolute;
+  bottom: -20%;
+}
+
+.chat__arr {
+  height: 100%;
+}

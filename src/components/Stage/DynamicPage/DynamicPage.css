@@ -1,0 +1,15 @@
+.bonusMaterial {
+  height: 100%;
+  width: 100%;
+  margin: 5px;
+}
+
+.bonusMaterial__content {
+  height: 23vh;
+  width: 100%;
+}
+
+.bonusMaterial__embed {
+  height: 100%;
+  width: 100%;
+}
