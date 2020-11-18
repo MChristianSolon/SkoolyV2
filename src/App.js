@@ -1,3 +1,4 @@
+import React, {useState } from 'react'
 import './App.css';
 import 'fontsource-roboto'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
@@ -10,6 +11,7 @@ import {grey} from '@material-ui/core/colors'
 import Stage from './components/Stage/Stage';
 import AppBar from './components/AppBars/AppBar'
 import Grid from '@material-ui/core/Grid'
+import { SubLessonContext } from './components/Contexts/SubLesson'
 
 const theme = createMuiTheme({
   pallette: {
@@ -22,10 +24,12 @@ const theme = createMuiTheme({
 
 
 function App() {
+  const [currentSubLesson, setCurrentSubLesson] = useState('Adding Matrices')
 
   return (
     <Router >
       <ThemeProvider theme={theme}>
+      <SubLessonContext.Provider value={{currentSubLesson, setCurrentSubLesson}}>
         <AppBar />
         <Grid container>
           <Grid item md={12}>
@@ -39,6 +43,7 @@ function App() {
             </Container>
           </Grid>
         </Grid>
+        </SubLessonContext.Provider>
       </ThemeProvider>
     </Router>
   );

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
@@ -6,14 +6,14 @@ import Avatar from '@material-ui/core/Avatar'
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Grid from '@material-ui/core/Grid'
-import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
 
-function SingleQuestion() {
+function SingleQuestion({text, commenter, answers}) {
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [answersArr, setAnswersArr] = useState([])
 
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
@@ -22,6 +22,21 @@ function SingleQuestion() {
     const handleClose = () => {
       setAnchorEl(null);
     };
+
+    useEffect(() => {
+      const newArr = []
+      for (var key in answers) {
+        if (answers.hasOwnProperty(key)) {
+            console.log(key + " -> " + answers[key]);
+            newArr.push(
+            <div key={key}>
+              <b>Answer:</b> {key}  
+          </div>
+          )
+        }
+        setAnswersArr(newArr)
+    }
+    },[answers])
 
     return (
     <Grid item sm={6} xs={12}>
@@ -41,20 +56,19 @@ function SingleQuestion() {
             <CardHeader
                 avatar={
                 <Avatar aria-label="recipe">
-                    R
+                    {commenter ? commenter[0] : 'R'}
                 </Avatar>
                 }
                 action={
-                <IconButton aria-label="settings">
-                       <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                <IconButton aria-label="settings" onClick={handleClick}>
                           <MoreVertIcon />
-                        </Button>
                 </IconButton>
                 }
-                title="Why does this do that again?"
-                subheader="22:05"
+                title={text ? text:  "No Question" }
+                subheader="5"
             />
-                <CardContent>
+                <CardContent>     
+                {answersArr}
                 </CardContent>
             </Card>
         </Grid>

@@ -17,18 +17,18 @@ const useStyles = makeStyles({
     }
 })
 
-function SingleMessage({message}) {
+function SingleMessage({text, username}) {
     const classes = useStyles();
     return (
         <Grid container spacing={1}>
             <Grid item>
                 <div>
-                {message}
+                {text}
                 </div>
             </Grid>
             <Grid item>
                 <div className={classes.messageLabel}>
-                    <PersonIcon className={classes.messagerIcon}/>Robyn
+                    <PersonIcon className={classes.messagerIcon}/>{username}
                 </div>
             </Grid>
         </Grid>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import {Link} from 'react-router-dom'
 import Grid from '@material-ui/core/Grid'
+import { SubLessonContext } from '../Contexts/SubLesson';
 
 
 const drawerWidth = 215;
@@ -56,18 +57,23 @@ function ResponsiveDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const {setCurrentSubLesson} = useContext(SubLessonContext)
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  const handleSubLessonChange = (subLesson) => {
+    setCurrentSubLesson(subLesson)
+  }
 
   const drawer = (
     <div>
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
+        {['Adding Matrices', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          <ListItem button key={text} onClick={() => handleSubLessonChange(text)}>
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
@@ -91,7 +97,7 @@ function ResponsiveDrawer(props) {
     <div className={classes.root}>
   
       <CssBaseline />
-        <Grid container  justify="space-between" spacing={24}>
+        <Grid container  justify="space-between" spacing={10}>
           <Grid item>
           <AppBar position="fixed" className={classes.appBar} style={{ background: 'transparent', boxShadow: 'none', color: 'black', position: 'relative'}}>
             <Toolbar>

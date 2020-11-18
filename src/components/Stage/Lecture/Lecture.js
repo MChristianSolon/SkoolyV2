@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useContext} from 'react'
 import YouTube from 'react-youtube'
 import Grid from '@material-ui/core/Grid'
 import {makeStyles} from '@material-ui/core/styles'
@@ -8,7 +8,9 @@ import Chip from '@material-ui/core/Chip'
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import Chat from './Chat/Chat';
 import Avatar from '@material-ui/core/Avatar'
+import {db} from '../../../Firebase/Firebase'
 import "./Lecture.css"
+import { CurrentTimeContext } from '../../Contexts/CurrentTime';
 
 const useStyles = makeStyles({
     liveButton: {
@@ -30,13 +32,43 @@ const useStyles = makeStyles({
     },
  
 })
+  
 
-function Lecture() {
+function Lecture({host, room, course_name}) {
     const classes = useStyles();
+    const {setGlobalCurrentTime} = useContext(CurrentTimeContext)
+
+    //Getting Room Data
+    useEffect(() => {
+       db.collection('users').doc(`t26xMhImYWBNNSVjNPJi`).onSnapshot(doc => {
+           const roomData = doc.data()
+           setGlobalCurrentTime(
+                roomData["courses"][`Linear Algebra`].SubLessons[`Matrices`][`Adding Matrices`].currentTime
+            )
+       
+       })
+    }, [setGlobalCurrentTime])
+
+    const handleTimeChange = (event) => {
+            const roundedTime = Math.round(event.target.getCurrentTime())
+            db.collection('users').doc(`t26xMhImYWBNNSVjNPJi`).update({
+                "courses.Linear Algebra.SubLessons.Matrices.Adding Matrices.currentTime" : `${roundedTime}`   
+            })
+            setGlobalCurrentTime(roundedTime)   
+    }
+
+    const opts = {
+        height: '390',
+        width: '450',
+        playerVars: {
+          // https://developers.google.com/youtube/player_parameters
+          autoplay: 1,
+        },  
+      };
     return (
             <Grid container direction="row" spacing={2} justify="space-between" className="lecture">
                 <Grid item xs={12}>
-                <YouTube videoId="2g811Eo7K8U" />
+                <YouTube videoId="PjStfWnfDVI" onStateChange={handleTimeChange} opts={opts}/>
                 </Grid>
                 <Grid item md={2} xs={4}>
                 <Chip icon={<FiberManualRecordIcon className={classes.liveIcon}/>} label="Live" className={classes.liveButton}/>
@@ -52,10 +84,11 @@ function Lecture() {
                 <Grid item md={12}>
                     <center>
                         <Avatar>C</Avatar>
+                        {course_name}
                     </center>
                 </Grid>
-                <Grid item md={12} className="lecture__chat">
-                        <Chat />
+                <Grid item md={12} className="lecture__chat" style={{maxHeight: '200px'}}>
+                        <Chat host={host} room={room}/>
                 </Grid>
             </Grid>    
     )

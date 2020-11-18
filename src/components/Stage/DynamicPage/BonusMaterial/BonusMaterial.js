@@ -5,12 +5,13 @@ import Grid from "@material-ui/core/Grid"
 import "../DynamicPage.css"
 import AddBonusContent from './AddBonusContent'
 
-function BonusMaterial() {
+function BonusMaterial({static_content}) {
     const [bonusMaterial, setBonusMaterial] = useState([])
 
     useEffect(() => {
-        setBonusMaterial(null)
-    },[])
+        setBonusMaterial(static_content)
+        setBonusMaterial(false)
+    },[static_content])
     return (
         <Card className="bonusMaterial">
             <CardContent className="bonusMaterial__content">

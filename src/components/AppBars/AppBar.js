@@ -18,12 +18,13 @@ const stageTheme = createMuiTheme({
   })
 
 function AppBar() {
-    const location = useLocation();
-   
+    
+  const location = useLocation();
+
     return (
     <ThemeProvider theme={stageTheme}>
         <div>
-            {location.pathname === '/stage' ? 
+            {location.pathname === '/stage/' ? 
             <ResponsiveDrawer /> :
             <PrimarySearchAppBar />
             }
