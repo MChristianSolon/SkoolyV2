@@ -1,4 +1,4 @@
-import React, {useEffect, useContext} from 'react'
+import React, {useEffect, useContext, useState} from 'react'
 import YouTube from 'react-youtube'
 import Grid from '@material-ui/core/Grid'
 import {makeStyles} from '@material-ui/core/styles'
@@ -32,11 +32,14 @@ const useStyles = makeStyles({
     },
  
 })
-  
+    let contextPlaying
 
 function Lecture({host, room, course_name}) {
     const classes = useStyles();
+    const [videoEvent, setVideoEvent] = useState(null)
     const {setGlobalCurrentTime} = useContext(CurrentTimeContext)
+    const [isPlaying, setIsPlaying] = useState(false)
+
 
     //Getting Room Data
     useEffect(() => {
@@ -56,7 +59,31 @@ function Lecture({host, room, course_name}) {
             })
             setGlobalCurrentTime(roundedTime)   
     }
+    
+    //Live Counter
+    const handleLiveCount = (event) => {
+        setVideoEvent(event)
+        setIsPlaying(true)
+        contextPlaying=true
+    }
+    
+    useEffect(() => {
+        if(videoEvent && isPlaying){
+          const refreshTime = setInterval(function()
+            { if(contextPlaying === true){ 
+                setGlobalCurrentTime(Math.floor(videoEvent.target.getCurrentTime()))
+            }else{
+                clearInterval(refreshTime)
+            }   
+            }, 1000);
+        }
+     
+    },[videoEvent, isPlaying, setGlobalCurrentTime])
 
+    const handlePause = () => {
+        setIsPlaying(false)
+        contextPlaying = false
+    }
     const opts = {
         height: '390',
         width: '450',
@@ -68,7 +95,7 @@ function Lecture({host, room, course_name}) {
     return (
             <Grid container direction="row" spacing={2} justify="space-between" className="lecture">
                 <Grid item xs={12}>
-                <YouTube videoId="PjStfWnfDVI" onStateChange={handleTimeChange} opts={opts}/>
+                <YouTube videoId="PjStfWnfDVI" onStateChange={handleTimeChange} opts={opts} onPlay={handleLiveCount} onPause={handlePause}/>
                 </Grid>
                 <Grid item md={2} xs={4}>
                 <Chip icon={<FiberManualRecordIcon className={classes.liveIcon}/>} label="Live" className={classes.liveButton}/>
@@ -87,7 +114,7 @@ function Lecture({host, room, course_name}) {
                         {course_name}
                     </center>
                 </Grid>
-                <Grid item md={12} className="lecture__chat" style={{maxHeight: '200px'}}>
+                <Grid item md={12} className="lecture__chat" style={{maxHeight: '20vh'}}>
                         <Chat host={host} room={room}/>
                 </Grid>
             </Grid>    

@@ -4,23 +4,27 @@ import PersonIcon from '@material-ui/icons/Person';
 import {makeStyles} from '@material-ui/core/styles'
 import "./Chat.css"
 
+
 const useStyles = makeStyles({
+    message: {
+        marginTop: '10px'
+    },
     messagerIcon: {
         height: "12px"
     },
     messageLabel:{
         position: "relative",
-        top: '10px',
+        top: '3.5px',
         height: "15px",
         fontSize: "10px",
-        backGround: "black"
+        color: 'blue'
     }
 })
 
 function SingleMessage({text, username}) {
     const classes = useStyles();
     return (
-        <Grid container spacing={1}>
+        <Grid container className={classes.message}>
             <Grid item>
                 <div>
                 {text}

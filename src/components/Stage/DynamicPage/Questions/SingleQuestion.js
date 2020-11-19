@@ -27,7 +27,6 @@ function SingleQuestion({text, commenter, answers}) {
       const newArr = []
       for (var key in answers) {
         if (answers.hasOwnProperty(key)) {
-            console.log(key + " -> " + answers[key]);
             newArr.push(
             <div key={key}>
               <b>Answer:</b> {key}  

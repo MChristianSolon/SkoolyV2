@@ -18,6 +18,7 @@ function Stage({location}) {
     const [roomData, setRoomData] = useState({})
     const [globalCurrentTime, setGlobalCurrentTime] = useState(0)
     const {currentSubLesson} = useContext(SubLessonContext)
+    const [roomId, setRoomId] = useState("")
 
     useEffect(() => {
         const { host, room } = queryString.parse(location.search);
@@ -26,30 +27,31 @@ function Stage({location}) {
     },[location]) 
 
     useEffect(() => {
-        db.collection('courses').where('room', '==' ,`123`).get().then(snap => {
+        db.collection('courses').where('room', '==' ,`${room}`).onSnapshot(snap => {
             snap.forEach(doc => {
+                setRoomId(doc.id)
                 if(doc.data().SubLessons[`${currentSubLesson}`]){
                     setRoomData(doc.data().SubLessons[`${currentSubLesson}`])
                 }
             })
         })
-    },[globalCurrentTime, currentSubLesson])
+    },[currentSubLesson, room])
 
     return (
         <CurrentTimeContext.Provider value={{globalCurrentTime, setGlobalCurrentTime}}>
                 <OnlineUsers />
-                <Grid container className="stage" >
+                <Grid container className="stage" style={{height: '100vh'}} >
                     <Grid item md={7} xs={12}  >
                         <Card style={{height: '100%', maxHeight: "100%"}}>
                             <CardContent>
-                            <DynamicPage roomData={roomData}/>
+                            <DynamicPage roomData={roomData} roomId={roomId}/>
                             </CardContent>
                         </Card>
                     </Grid>
                     <Grid item md={5} xs={12} >
                         <Card  style={{height: '100%', maxHeight: "100%"}}>
-                            <CardContent>
-                                <Lecture host={host} room={room} roomName={room.course_name}/>
+                            <CardContent style={{height: '100%', maxHeight: "100%"}}>
+                                <Lecture host={host} room={room} roomName={roomData.course_name}/>
                             </CardContent>
                         </Card>
                     </Grid>
