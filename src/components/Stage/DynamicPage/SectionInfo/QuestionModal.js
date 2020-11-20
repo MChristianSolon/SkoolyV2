@@ -38,9 +38,6 @@ export default function RecipeReviewCard({currentSubLesson, globalCurrentTime, r
   };
   const handleSubmitQuestion = (event) => {
       event.preventDefault()
-      db.collection('courses').doc(`${roomId}`).get().then(doc => {
-          console.log(doc.data())
-      })
       const SubLessons = `SubLessons.${currentSubLesson}.times.${globalCurrentTime}.questions.${question}.commenter`
    
        db.collection('courses').doc(`${roomId}`).update({
