@@ -1,6 +1,6 @@
-import React, {useState } from 'react'
 import './App.css';
 import 'fontsource-roboto'
+import React, {useState } from 'react'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import LandingPage from './components/LandingPage/LandingPage';
 import Homepage from './components/Homepage/Homepage';
@@ -12,6 +12,7 @@ import Stage from './components/Stage/Stage';
 import AppBar from './components/AppBars/AppBar'
 import Grid from '@material-ui/core/Grid'
 import { SubLessonContext } from './components/Contexts/SubLesson'
+import CreatorStudio from './components/CreatorStudio/CreatorStudio';
 
 const theme = createMuiTheme({
   pallette: {
@@ -39,6 +40,7 @@ function App() {
               <Route path="/home" component={Homepage} />
               <Route path="/profile"  component={Profile}/>
               <Route path="/stage" component={Stage} />
+              <Route path="/create" component={CreatorStudio} />
             </Switch>
             </Container>
           </Grid>

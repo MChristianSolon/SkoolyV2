@@ -7,7 +7,7 @@ import './Static.css'
 import TeachersNotes from './TeachersNotes'
 
 
-function Static() {
+function Static({videoTranscript}) {
     return (
         <Grid container >
             <Grid item xs={12} >
@@ -20,7 +20,7 @@ function Static() {
             <Grid item xs={12} >
                 <Card variant="outlined" className="static">
                     <CardContent >
-                      <TeachersNotes />                  
+                      <TeachersNotes videoTranscript={videoTranscript}/>                  
                     </CardContent>
                 </Card>
             </Grid>

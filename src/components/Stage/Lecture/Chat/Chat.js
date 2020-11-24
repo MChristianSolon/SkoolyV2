@@ -26,6 +26,8 @@ function Chat({host, room}) {
         socket.emit('join', { host, room , user})
         return socket.off('join')
     },[host, room, user])
+
+    //leaving room
  
     //recieving messages
     useEffect(() => {

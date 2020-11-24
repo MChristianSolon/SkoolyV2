@@ -83,7 +83,13 @@ function Lecture({host, room, course_name}) {
     const handlePause = () => {
         setIsPlaying(false)
         contextPlaying = false
-    }
+    }   
+
+    //captions
+    useEffect(() => {
+     
+    })
+
     const opts = {
         height: '390',
         width: '450',
@@ -95,7 +101,7 @@ function Lecture({host, room, course_name}) {
     return (
             <Grid container direction="row" spacing={2} justify="space-between" className="lecture">
                 <Grid item xs={12}>
-                <YouTube videoId="PjStfWnfDVI" onStateChange={handleTimeChange} opts={opts} onPlay={handleLiveCount} onPause={handlePause}/>
+                <YouTube videoId="Aoi4j8es4gQ" onStateChange={handleTimeChange} opts={opts} onPlay={handleLiveCount} onPause={handlePause}/>
                 </Grid>
                 <Grid item md={2} xs={4}>
                 <Chip icon={<FiberManualRecordIcon className={classes.liveIcon}/>} label="Live" className={classes.liveButton}/>

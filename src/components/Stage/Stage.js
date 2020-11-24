@@ -9,6 +9,7 @@ import OnlineUsers from './OnlineUsers/OnlineUsers'
 import queryString from 'query-string'
 import {CurrentTimeContext} from '../Contexts/CurrentTime'
 import {db} from '../../Firebase/Firebase'
+import axios from './Transcripts/trans'
 import "./Stage.css"
 import { SubLessonContext } from '../Contexts/SubLesson'
 
@@ -19,6 +20,7 @@ function Stage({location}) {
     const [globalCurrentTime, setGlobalCurrentTime] = useState(0)
     const {currentSubLesson} = useContext(SubLessonContext)
     const [roomId, setRoomId] = useState("")
+    const [videoTranscript, setVideoTranscript] = useState("")
 
     useEffect(() => {
         const { host, room } = queryString.parse(location.search);
@@ -36,6 +38,29 @@ function Stage({location}) {
             })
         })
     },[currentSubLesson, room])
+
+      //transcript Logic
+
+    useEffect(() => {
+        let transcript = ""; 
+        async function fetchTranscriptData(){
+            const request = await axios.post('timedtext?lang=en&v=Aoi4j8es4gQ').then(response => {
+                let parser = new DOMParser();
+                let xml = parser.parseFromString(response.data, "application/xml");
+                let phrases = xml.getElementsByTagName('text');
+                for(let i = 0; i < phrases.length; i++){
+                    transcript += `\n ${i} ---> ${phrases[i].textContent}\n\n`
+                }
+            }).then(() => {
+                setVideoTranscript(transcript)
+            });
+            return request;
+        }
+        fetchTranscriptData();   
+        
+    }, [])
+
+
 
     return (
         <CurrentTimeContext.Provider value={{globalCurrentTime, setGlobalCurrentTime}}>
@@ -56,7 +81,7 @@ function Stage({location}) {
                         </Card>
                     </Grid>
                     <Grid item xs={12}>
-                        <Static />
+                        <Static videoTranscript={videoTranscript}/>
                     </Grid>
                 </Grid>
     </CurrentTimeContext.Provider>

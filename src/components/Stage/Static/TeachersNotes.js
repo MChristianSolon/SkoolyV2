@@ -1,9 +1,12 @@
 import React from 'react'
 
-function TeachersNotes() {
+function TeachersNotes({videoTranscript}) {
+    console.log("BITCH" + videoTranscript)
     return (
-        <div>
-            Some Notes
+        <div style={{whiteSpace: "pre-wrap", textAlign: "left"}}>
+            <p>
+            {videoTranscript}
+            </p>
         </div>
     )
 }
