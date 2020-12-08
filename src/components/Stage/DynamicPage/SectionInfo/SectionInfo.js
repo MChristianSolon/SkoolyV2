@@ -16,8 +16,14 @@ function SectionInfo({globalCurrentTime, roomId}) {
     return (
         <Grid container spacing={2} direction="row">
             <Grid item xs={12}>
-            {currentSubLesson}
-            {viewTime}
+            <h3>
+                {currentSubLesson}
+            <b style={{border: '1px black solid', margin: '10px', padding: '10px'}}>
+            {viewTime} minutes
+            </b>
+            </h3>         
+            </Grid>
+            <Grid item xs={6}>     
             </Grid>
             <Grid item xs={12}>
                 <QuestionModal roomId={roomId} currentSubLesson={currentSubLesson} globalCurrentTime={globalCurrentTime}/>

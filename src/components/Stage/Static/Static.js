@@ -9,7 +9,7 @@ import TeachersNotes from './TeachersNotes'
 
 function Static({videoTranscript}) {
     return (
-        <Grid container >
+        <Grid container>
             <Grid item xs={12} >
                 <Card variant="outlined" className="static">
                     <CardContent >

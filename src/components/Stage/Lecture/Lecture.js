@@ -34,7 +34,7 @@ const useStyles = makeStyles({
 })
     let contextPlaying
 
-function Lecture({host, room, course_name}) {
+function Lecture({host, room, course_name, videoId}) {
     const classes = useStyles();
     const [videoEvent, setVideoEvent] = useState(null)
     const {setGlobalCurrentTime} = useContext(CurrentTimeContext)
@@ -51,6 +51,7 @@ function Lecture({host, room, course_name}) {
        
        })
     }, [setGlobalCurrentTime])
+
 
     const handleTimeChange = (event) => {
             const roundedTime = Math.round(event.target.getCurrentTime())
@@ -101,7 +102,7 @@ function Lecture({host, room, course_name}) {
     return (
             <Grid container direction="row" spacing={2} justify="space-between" className="lecture">
                 <Grid item xs={12}>
-                <YouTube videoId="Aoi4j8es4gQ" onStateChange={handleTimeChange} opts={opts} onPlay={handleLiveCount} onPause={handlePause}/>
+                <YouTube videoId={videoId} onStateChange={handleTimeChange} opts={opts} onPlay={handleLiveCount} onPause={handlePause}/>
                 </Grid>
                 <Grid item md={2} xs={4}>
                 <Chip icon={<FiberManualRecordIcon className={classes.liveIcon}/>} label="Live" className={classes.liveButton}/>

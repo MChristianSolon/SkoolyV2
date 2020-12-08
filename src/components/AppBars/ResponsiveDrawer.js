@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -19,7 +19,11 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import {Link} from 'react-router-dom'
 import Grid from '@material-ui/core/Grid'
 import { SubLessonContext } from '../Contexts/SubLesson';
-
+import {RoomDataContext} from '../Contexts/RoomDataContext'
+import StageDrawer from './StageDrawer/StageDrawer'
+import Button from '@material-ui/core/Button'
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import {db, auth} from '../../Firebase/Firebase'
 
 const drawerWidth = 215;
 
@@ -57,7 +61,9 @@ function ResponsiveDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const {setCurrentSubLesson} = useContext(SubLessonContext)
+  const {currentSubLesson, setCurrentSubLesson} = useContext(SubLessonContext)
+  const {globalRoomData} = useContext(RoomDataContext)
+  const [subLessons, setSubLessons] = useState([])
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -67,13 +73,26 @@ function ResponsiveDrawer(props) {
     setCurrentSubLesson(subLesson)
   }
 
+  useEffect(() => { 
+    setSubLessons(Object.keys(globalRoomData))
+  }, [globalRoomData])
+
+  const handleComplete = () => {
+    setCurrentSubLesson(subLessons[subLessons.indexOf(currentSubLesson) + 1])
+    db.collection('users').doc(`${auth.currentUser.uid}`).update({
+      [`courses.${`Linear Algebra`}.${currentSubLesson}`] : 100
+    })
+  }
+
   const drawer = (
     <div>
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {['Adding Matrices', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text} onClick={() => handleSubLessonChange(text)}>
+        {subLessons.sort().map((text, index) => (
+          <ListItem button key={text} 
+          onClick={() => handleSubLessonChange(text)} 
+          style={currentSubLesson === text ? {backgroundColor: "#9e9e9e"} : {}}>
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
@@ -81,15 +100,21 @@ function ResponsiveDrawer(props) {
       </List>
       <Divider />
       <List>
-        {['All mail', 'Trash', 'Logout'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+        {['Proceed'].map((text) => (
+          <ListItem key={text} onClick={handleComplete}>
+            <Button color="primary" variant="contained" startIcon={<NavigateNextIcon />}>{text}</Button>
           </ListItem>
         ))}
       </List>
     </div>
   );
+
+  const drawerRight = (
+    <div>
+      <div className={classes.toolbar} />
+      <StageDrawer />
+      </div>
+  )
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -146,6 +171,15 @@ function ResponsiveDrawer(props) {
             variant="permanent"
           >
             {drawer}
+          </Drawer>
+          <Drawer
+            anchor="right"
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            variant="permanent"
+          >
+            {drawerRight}
           </Drawer>
         </Hidden>
       </nav>

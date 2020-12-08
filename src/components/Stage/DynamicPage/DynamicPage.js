@@ -5,6 +5,7 @@ import Questions from './Questions/Questions'
 import SectionInfo from './SectionInfo/SectionInfo'
 import { CurrentTimeContext } from '../../Contexts/CurrentTime'
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Divider from '@material-ui/core/Divider'
 import './DynamicPage.css'
 
 
@@ -13,9 +14,10 @@ function DynamicPage({roomData, roomId}) {
     if(roomData.times){
         return (
                  <Grid container className="dynamicPage">
-                 <Grid item md={12}>
+                    <Grid item md={12}>
                         <SectionInfo globalCurrentTime={globalCurrentTime} roomId={roomId}/>
-                        <Questions roomId={roomId} questions={roomData.times[globalCurrentTime] ? roomData.times : console.log("no questions here")}/>
+                        <Divider />
+                        <Questions roomId={roomId} questions={roomData.times[globalCurrentTime] ? roomData.times : ""}/>
                      </Grid>
                      <Grid item md={12} xs={12}>
                          <BonusMaterial static_content={roomData.times[globalCurrentTime] ? roomData.times[globalCurrentTime].time_static_content : ""}/>

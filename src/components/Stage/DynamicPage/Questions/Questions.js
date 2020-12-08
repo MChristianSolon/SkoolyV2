@@ -19,10 +19,12 @@ function Questions({questions, roomId}) {
                         newArr.push(<SingleQuestion 
                             key={Math.random()*10000} 
                             roomId={roomId} 
+                            questionKey = {key}
                             questionTime={globalCurrentTime}
-                            text={key} 
-                            commenter={questions[globalCurrentTime].questions[key].commenter} 
-                            answers={questions[globalCurrentTime].questions[key].replies}/>)
+                            text={questions[globalCurrentTime].questions[key].question} 
+                            commenter={questions[globalCurrentTime].questions[key].user} 
+                            answers={questions[globalCurrentTime].questions[key].replies}
+                            photo={questions[globalCurrentTime].questions[key].photo}/>)
                     }
                 }
                 return newArr

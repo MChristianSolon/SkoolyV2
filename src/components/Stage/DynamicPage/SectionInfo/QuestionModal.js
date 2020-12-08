@@ -1,70 +1,50 @@
-import React, {useState} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Collapse from '@material-ui/core/Collapse';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import CreateIcon from '@material-ui/icons/Create'
-import { Button } from '@material-ui/core';
+import React, {useState, useContext} from 'react';
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
-import {db} from '../../../../Firebase/Firebase'
-
-
-const useStyles = makeStyles((theme) => ({
-  expand: {
-    transform: 'rotate(0deg)',
-    position: 'relative',
-    left: 20,
-    top: 5,
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
-  },
-
-}));
+import {db, timestamp} from '../../../../Firebase/Firebase'
+import {CurrentUserContext} from '../../../Contexts/CurrentUser'
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
 
 export default function RecipeReviewCard({currentSubLesson, globalCurrentTime, roomId}) {
-  const classes = useStyles();
-  const [expanded, setExpanded] = useState(false);
   const [question, setQuestion] = useState("")
+  const {currentUser }= useContext(CurrentUserContext)
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
   const handleSubmitQuestion = (event) => {
       event.preventDefault()
-      const SubLessons = `SubLessons.${currentSubLesson}.times.${globalCurrentTime}.questions.${question}.commenter`
-   
+      const SubLessons = `SubLessons.${currentSubLesson}.times.${globalCurrentTime}.questions`
+      const random = Math.round(Math.random() * 100000)
        db.collection('courses').doc(`${roomId}`).update({
-           [SubLessons] : "cry"
+           [`${SubLessons}.${random}`] : {
+              question,
+              time: timestamp(),
+              user: currentUser.name,
+              photo: currentUser.photo
+           }
       })
       setQuestion("")
   }
 
   return (
     <Grid container spacing={4}>
-        <Grid item md={6} xs={6} s={6}>
-            <Button variant="contained" color="primary" startIcon={<CreateIcon />} onClick={handleExpandClick}>
-                Ask A Question
-            </Button>
-            <ExpandMoreIcon  className={clsx(classes.expand, {[classes.expandOpen]: expanded, })}/>
-        </Grid>
         <Grid item xs={12}>
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <Card>
-                <CardContent>
-                    <form onSubmit={handleSubmitQuestion}>
-                    <TextField placeholder="Enter Text Here" value={question} onChange={event => setQuestion(event.target.value)}/>
-                    <button type="submit" style={{display: 'none'}} />
-                    </form>
-                </CardContent>
-            </Card>  
-        </Collapse>
+            <form onSubmit={handleSubmitQuestion}>
+              <Grid container spacing={1} alignItems="flex-end">
+              <Grid item>
+              <Avatar src={currentUser.photo} alt={currentUser.name} />
+              </Grid>
+              <Grid item md={8}>
+              <TextField placeholder="Start a Discussion..." 
+                value={question} 
+                onChange={event => setQuestion(event.target.value)}
+                style={{width: '80%'}}
+                />
+              </Grid>
+              <Grid item xs={12}>
+              <Button type="submit" variant="contained" style={{display: 'none'}}>Submit</Button>
+              </Grid>
+            </Grid>
+            </form>
         </Grid>
       </Grid>
   );
