@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
 import { Button, Grid, TextField, Typography } from '@material-ui/core';
 
-function CreateSuccess({ url }) {
+function CreateSuccess({ username, courseId }) {
+    console.log('reached')
     const urlField = useRef();
 
     const copyToClipboard = () => {
@@ -15,7 +16,7 @@ function CreateSuccess({ url }) {
                 <img src="https://media1.tenor.com/images/3ffc9f941d9f6187193e17485f3b1612/tenor.gif?itemid=18581387" style={{width: '500px'}} alt="success"/>
                 
                 <Typography variant="h3">Course Created</Typography>
-                <TextField value={url} inputRef={urlField}/>
+                <TextField value={`skooly.com/courses?host=${username}&course=${courseId}`} inputRef={urlField}/>
                 <Button color="primary" onClick={copyToClipboard}>Copy</Button>
                 <Button variant="outlined" color="primary">Share</Button>
                 <Button variant="contained" color="primary">Visit</Button>

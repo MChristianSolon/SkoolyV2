@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -7,23 +7,18 @@ import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ReceiptIcon from '@material-ui/icons/Receipt';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
 import {Link} from 'react-router-dom'
 import Grid from '@material-ui/core/Grid'
-import { SubLessonContext } from '../Contexts/SubLesson';
-import {RoomDataContext} from '../Contexts/RoomDataContext'
-import StageDrawer from './StageDrawer/StageDrawer'
-import Button from '@material-ui/core/Button'
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {db, auth} from '../../Firebase/Firebase'
+import ProfileRight from './ProfileDrawer/ProfileRight';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText'
+import HomeIcon from '@material-ui/icons/Home';
+import ForumIcon from '@material-ui/icons/Forum';
 
 const drawerWidth = 215;
 
@@ -61,60 +56,33 @@ function ResponsiveDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const {currentSubLesson, setCurrentSubLesson} = useContext(SubLessonContext)
-  const {globalRoomData} = useContext(RoomDataContext)
-  const [subLessons, setSubLessons] = useState([])
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const handleSubLessonChange = (subLesson) => {
-    setCurrentSubLesson(subLesson)
-  }
-
-  useEffect(() => { 
-    setSubLessons(Object.keys(globalRoomData))
-  }, [globalRoomData])
-
-  const handleComplete = () => {
-    if(subLessons[subLessons.indexOf(currentSubLesson) + 1]){
-      setCurrentSubLesson(subLessons[subLessons.indexOf(currentSubLesson) + 1])
-      db.collection('users').doc(`${auth.currentUser.uid}`).update({
-        [`courses.${`Linear Algebra`}.${currentSubLesson}`] : 100
-      })
-    }
-  }
-
   const drawer = (
-    <div>
+  <div>
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {subLessons.sort().map((text, index) => (
-          <ListItem button key={text} 
-          onClick={() => handleSubLessonChange(text)} 
-          style={currentSubLesson === text ? {backgroundColor: "#9e9e9e"} : {}}>
-            <ListItemIcon>{index % 2 === 0 ? <OndemandVideoIcon /> : <ReceiptIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+        {['Dashboard', 'Discussions'].map((text, index) => (
+          <>
+          <ListItem button key={text} style={{padding: '30px', paddingLeft: '20px'}}>
+            <ListItemIcon >{index % 2 === 0 ? <HomeIcon fontSize="large"/> : <ForumIcon fontSize="large"/>}</ListItemIcon>
+            <ListItemText>{text}</ListItemText>
           </ListItem>
+          </>
         ))}
       </List>
       <Divider />
-      <List>
-        {['Proceed'].map((text) => (
-          <ListItem key={text} onClick={handleComplete}>
-            <Button color="primary" variant="contained" startIcon={<NavigateNextIcon />} style={{width: '100%'}}>{text}</Button>
-          </ListItem>
-        ))}
-      </List>
     </div>
   );
 
   const drawerRight = (
     <div>
       <div className={classes.toolbar} />
-      <StageDrawer />
+      <ProfileRight />
       </div>
   )
 

@@ -58,7 +58,7 @@ function Chat({host, room}) {
                 <CardContent >
                     <Grid item xs={12} style={{height:'20vh'}}>
                         <ScrollToBottom>
-                            <div style={{height:'14vh'}}>
+                            <div style={{height:'15vh'}}>
                                 {chatArr}
                                 </div> 
                         </ScrollToBottom>

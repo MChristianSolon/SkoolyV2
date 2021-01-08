@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import SingleCourseProgress from './SingleCourseProgress'
 import {db, auth} from '../../../Firebase/Firebase' 
+import Divider from '@material-ui/core/Divider'
 
 function SubLessonsProgress() {
     const [subLessonsProgress, setSubLessonsProgress] = useState([])
@@ -23,7 +24,10 @@ function SubLessonsProgress() {
                 Object.values(doc.data().courses).forEach(course => {
                     Object.keys(course).forEach(progress => {
                     newArr.push(
-                        <SingleCourseProgress key={progress} SubLessonTitle={progress} percent={course[progress]}/>
+                        <div>
+                            <SingleCourseProgress key={progress} SubLessonTitle={progress} percent={course[progress]}/>
+                            <Divider/>
+                        </div>
                     ) 
                     })
                 })

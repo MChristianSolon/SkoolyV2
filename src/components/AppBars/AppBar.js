@@ -1,6 +1,7 @@
 import React from 'react'
 import PrimarySearchAppBar from './PrimarySearchAppBar'
 import ResponsiveDrawer from './ResponsiveDrawer'
+import ProfileAppBar from './ProfileAppBar'
 import { useLocation } from 'react-router-dom'
 import {ThemeProvider, createMuiTheme} from '@material-ui/core/styles'
 
@@ -26,6 +27,8 @@ function AppBar() {
         <div>
             {location.pathname === '/stage/' ? 
             <ResponsiveDrawer /> :
+            location.pathname === '/profile' ? 
+            <ProfileAppBar /> :
             <PrimarySearchAppBar />
             }
         </div>

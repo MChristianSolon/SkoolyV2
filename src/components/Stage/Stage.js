@@ -12,6 +12,7 @@ import axios from './Transcripts/trans'
 import "./Stage.css"
 import { SubLessonContext } from '../Contexts/SubLesson'
 import {RoomDataContext} from '../Contexts/RoomDataContext'
+import Quiz from './Quiz/Quiz'
 
 function Stage({location}) {
     const [host, setHost] = useState("")
@@ -24,6 +25,8 @@ function Stage({location}) {
     const [roomId, setRoomId] = useState("")
     const [videoTranscript, setVideoTranscript] = useState("")
     const [currentUser] = useState({})
+    const [expand, setExpand] = useState(false)
+    const [stageType, setStageType] = useState("Video")
 
     useEffect(() => {
         const { host, room } = queryString.parse(location.search);
@@ -73,35 +76,44 @@ function Stage({location}) {
         if(auth.currentUser && currentCourse){   
             db.collection('users').doc(`${auth.currentUser.uid}`).get().then(doc => {
                if(doc.data().courses[currentCourse]){
-               }
+               }else if(currentCourse){
+                let keys = {}
+                const lesson = {}
+                Object.keys(globalRoomData).forEach(key => {
+                    lesson[key] = 0
+                })
+                lesson.room = {room, host}
+            keys = lesson
+            db.collection('users').doc(`${auth.currentUser.uid}`).update({
+                [`courses.${currentCourse}`] : keys
             })
-        }else if(currentCourse){
-            let keys = {}
-            const lesson = {}
-            Object.keys(globalRoomData).forEach(key => {
-                lesson[key] = 0
-            })
-        keys = lesson
-        db.collection('users').doc(`${auth.currentUser.uid}`).update({
-            [`courses.${currentCourse}`] : keys
+           }
         })
         }
-    },[currentCourse, globalRoomData])
+    },[currentCourse, globalRoomData, host, room])
+
+    useEffect(() => {
+        if(roomData.course_name === 'Quiz'){
+            setStageType("Quiz")
+        }else{
+            setStageType("Video")
+        }
+    },[roomData])
 
     return (
         <CurrentTimeContext.Provider value={{globalCurrentTime, setGlobalCurrentTime}}>
-                <Grid container className="stage" style={{height: '100vh'}} >
-                    <Grid item md={7} xs={12}  >
+                <Grid container className="stage" style={stageType === "Quiz" ? {display: 'none'} : {height: '100vh'}}>
+                    <Grid item md={7} xs={12} style={expand ? {display: 'none'} : {}}>
                         <Card style={{height: '100%', maxHeight: "100%"}}>
                             <CardContent>
                             <DynamicPage roomData={roomData} roomId={roomId}/>
                             </CardContent>
                         </Card>
-                    </Grid>
-                    <Grid item md={5} xs={12} >
+                    </Grid> 
+                    <Grid item md={expand ? 12 : 5}  xs={12} >
                         <Card  style={{height: '100%', maxHeight: "100%"}}>
                             <CardContent style={{height: '100%', maxHeight: "100%"}}>
-                                <Lecture host={host} room={room} roomName={roomData.course_name} videoId={youtube_parser(roomData.video_url)} currentUser={currentUser}/>
+                                <Lecture host={host} room={room} roomName={roomData.course_name} videoId={youtube_parser(roomData.video_url)} currentUser={currentUser} expand={{expand, setExpand}}/>
                             </CardContent>
                         </Card>
                     </Grid>
@@ -109,6 +121,7 @@ function Stage({location}) {
                         <Static videoTranscript={videoTranscript}/>
                     </Grid>
                 </Grid>
+                <Quiz stageType={stageType}/>
     </CurrentTimeContext.Provider>
     )
 }

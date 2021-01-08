@@ -95,6 +95,7 @@ export default function PrimarySearchAppBar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [search, setSearch] = React.useState("")
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -115,6 +116,10 @@ export default function PrimarySearchAppBar() {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value)
+  }
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -178,7 +183,6 @@ export default function PrimarySearchAppBar() {
     <div className={classes.grow}>
       <AppBar className={classes.appBar} position="static" style={{ background: 'transparent', boxShadow: 'none', color: 'black', position: 'relative'}}>
         <Toolbar>
-     
             <IconButton
               edge="start"
               className={classes.menuButton}
@@ -204,6 +208,8 @@ export default function PrimarySearchAppBar() {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
+              value={search}
+              onChange={(event) => handleSearch(event)}
             />
           </div>
           <div className={classes.grow} />

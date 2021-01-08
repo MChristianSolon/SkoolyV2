@@ -6,12 +6,12 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import DiscussionBody from './DiscussionBody';
 import Grid from '@material-ui/core/Grid'
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 import OpenWithIcon from '@material-ui/icons/OpenWith';
+import TextField from '@material-ui/core/TextField'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    width: '80vw',
+    width: '80vw  ',
     height: '75vh',
     backgroundColor: "#f5f5f5",
     border: '2px solid black',
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SimpleModal({questionText, commenter, responses}) {
+export default function SimpleModal({questionText, commenter, responses, replyObj}) {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = React.useState(false);
@@ -48,12 +48,25 @@ export default function SimpleModal({questionText, commenter, responses}) {
               <DiscussionHead questionText={questionText} commenter={commenter}/>
               </Grid>
               <Grid item xs={12}>
-              <AddCircleIcon style={{float:"right", fontSize: "36px"}}/>
+                <form onSubmit={(event) => {
+                  event.preventDefault()
+                  replyObj.handleResponse()
+                  }}
+                  style={{width: '100%'}}
+                  >
+                  <TextField 
+                  style={{width: '40%', marginLeft: '11%'}}
+                  placeholder="Say Something Here..." 
+                  value={replyObj.response} 
+                  onChange={(event) => {
+                    replyObj.setResponse(event.target.value)
+                  }}/>
+                </form>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{height: '100%'}}>
               <DiscussionBody responses={responses}/>
               </Grid>
-            </Grid>
+              </Grid>
             </CardContent>
           </Card>
         </CardContent>

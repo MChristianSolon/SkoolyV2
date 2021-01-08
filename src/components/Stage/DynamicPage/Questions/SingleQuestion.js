@@ -56,7 +56,9 @@ function SingleQuestion({text, commenter, answers, roomId, questionTime, questio
       }
 
       const handleResponse = (event) => {
-        event.preventDefault()
+        if(event){
+          event.preventDefault()
+        }
         const SubLessons = `SubLessons.${currentSubLesson}.times.${questionTime}.questions.${questionKey}.replies.${Math.round(Math.random() * 100000)}`
    
        db.collection('courses').doc(`${roomId}`).update({
@@ -79,7 +81,7 @@ function SingleQuestion({text, commenter, answers, roomId, questionTime, questio
         onClose={handleClose}
       >
           <MenuItem onClick={handleClose}>
-            <ExpandQuestion questionText={text} commenter={commenter} responses={answers}/>
+            <ExpandQuestion questionText={text} commenter={commenter} responses={answers} replyObj={{setResponse, response, handleResponse}}/>
           </MenuItem>
           <MenuItem onClick={handleClose}>
             <TurnedInNotIcon />Save
@@ -89,7 +91,7 @@ function SingleQuestion({text, commenter, answers, roomId, questionTime, questio
           </MenuItem>
       </Menu>
            
-            <Card className="singleQuestion" style={{position:'relative'}}>
+            <Card className="singleQuestion" style={{position:'relative', maxHeight: '100%'}}>
             <CardHeader
                 avatar={
                 <Avatar aria-label="recipe" src={photo}>
@@ -104,8 +106,10 @@ function SingleQuestion({text, commenter, answers, roomId, questionTime, questio
                 title={text ? text:  "No Question" }
                 subheader={`${questionTime} seconds`}
             />
-                <CardContent >     
-                {answersArr}
+                <CardContent className="answers_Arr"> 
+                  <div  style={{height: '200px'}}>
+                  {answersArr}  
+                  </div>    
                 <form onSubmit={handleResponse}>
                   <TextField
                   InputProps={{

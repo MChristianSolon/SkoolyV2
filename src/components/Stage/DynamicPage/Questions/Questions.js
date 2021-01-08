@@ -3,6 +3,7 @@ import SingleQuestion from './SingleQuestion'
 import Grid from '@material-ui/core/Grid'
 import { SubLessonContext } from '../../../Contexts/SubLesson'
 import { CurrentTimeContext } from '../../../Contexts/CurrentTime'
+import Divider from '@material-ui/core/Divider'
 import './Question.css'
 
 function Questions({questions, roomId}) {
@@ -33,9 +34,12 @@ function Questions({questions, roomId}) {
    },[questions, currentSubLesson, roomId, globalCurrentTime])
 
     return (
-        <Grid container spacing={6} className="questions">
-            {questionArr}           
-        </Grid>
+        <div style={{marginTop: '10px'}}>
+            <Grid container spacing={6} className="questions">
+                {questionArr}           
+            </Grid>
+            <Divider />
+        </div>
          )
 }
 

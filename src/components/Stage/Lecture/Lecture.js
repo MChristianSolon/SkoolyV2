@@ -5,12 +5,12 @@ import {makeStyles} from '@material-ui/core/styles'
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import PeopleIcon from '@material-ui/icons/People';
 import Chip from '@material-ui/core/Chip'
-import LockOpenIcon from '@material-ui/icons/LockOpen';
 import Chat from './Chat/Chat';
 import Avatar from '@material-ui/core/Avatar'
 import {db} from '../../../Firebase/Firebase'
 import "./Lecture.css"
 import { CurrentTimeContext } from '../../Contexts/CurrentTime';
+import AspectRatioIcon from '@material-ui/icons/AspectRatio';
 
 const useStyles = makeStyles({
     liveButton: {
@@ -34,7 +34,7 @@ const useStyles = makeStyles({
 })
     let contextPlaying
 
-function Lecture({host, room, course_name, videoId}) {
+function Lecture({host, room, course_name, videoId, expand}) {
     const classes = useStyles();
     const [videoEvent, setVideoEvent] = useState(null)
     const {setGlobalCurrentTime} = useContext(CurrentTimeContext)
@@ -99,10 +99,19 @@ function Lecture({host, room, course_name, videoId}) {
           autoplay: 1,
         },  
       };
+
+      const optsExpand = {
+        height: '500',
+        width: '800',
+        playerVars: {
+          // https://developers.google.com/youtube/player_parameters
+          autoplay: 1,
+        },  
+      };
     return (
             <Grid container direction="row" spacing={2} justify="space-between" className="lecture">
                 <Grid item xs={12}>
-                <YouTube videoId={videoId} onStateChange={handleTimeChange} opts={opts} onPlay={handleLiveCount} onPause={handlePause}/>
+                <YouTube videoId={videoId} onStateChange={handleTimeChange} opts={expand.expand ? optsExpand : opts} onPlay={handleLiveCount} onPause={handlePause}/>
                 </Grid>
                 <Grid item md={2} xs={4}>
                 <Chip icon={<FiberManualRecordIcon className={classes.liveIcon}/>} label="Live" className={classes.liveButton}/>
@@ -111,8 +120,8 @@ function Lecture({host, room, course_name, videoId}) {
                     <Chip icon={<PeopleIcon />} label="24 Online" className={classes.chips}/>
                 </Grid>
                 <Grid item md={8} xs={12}>
-                    <div style={{float: "right"}}>
-                        <LockOpenIcon className={classes.lockIcon}/> Public Room
+                    <div style={{float: "right"}} onClick={() => expand.setExpand(prev => !prev)}>
+                        <AspectRatioIcon className={classes.lockIcon}/>Expand Icon
                     </div>
                 </Grid>
                 <Grid item md={12}>

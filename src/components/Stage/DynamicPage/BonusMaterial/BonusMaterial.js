@@ -30,8 +30,8 @@ function BonusMaterial({static_content}) {
     //     }
     // },[])
     return (
-        <Card className="bonusMaterial">
-            <CardContent className="bonusMaterial__content">
+        <Card className="bonusMaterial ">
+            <CardContent className="bonusMaterial__content ">
                 <Grid style={{height: "90%"}}>  
                 {false ?  
                 bonusEmbedd : 

@@ -13,7 +13,7 @@ function DynamicPage({roomData, roomId}) {
     const {globalCurrentTime} = useContext(CurrentTimeContext)
     if(roomData.times){
         return (
-                 <Grid container className="dynamicPage">
+                 <Grid container className="dynamicPage" >
                     <Grid item md={12}>
                         <SectionInfo globalCurrentTime={globalCurrentTime} roomId={roomId}/>
                         <Divider />

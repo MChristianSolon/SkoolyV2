@@ -1,42 +1,16 @@
 import React from 'react'
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import DescriptionIcon from '@material-ui/icons/Description';
-import CropOriginalIcon from '@material-ui/icons/CropOriginal';
 import Grid from '@material-ui/core/Grid'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import IconButton from '@material-ui/core/IconButton'
-
-    const useStyles = makeStyles({
-        abc_icon: {
-            width: '100%',
-            height: 80,
-        },
-        abc_position:{
-            position: 'relative',
-            top: '25%'
-        }
-    })
+import Avatar from '@material-ui/core/Avatar'
 
 function Selection() {
-    const classes = useStyles()
     return (
         <div>
-            <h1>Add Material</h1>
             <Grid container>
-                <Grid item xs={4}>
-                    <IconButton className={classes.abc_position}>
-                    <AddCircleIcon className={classes.abc_icon}/>
-                    </IconButton>
+                <Grid item xs={12}>
+                 <Avatar>H</Avatar>
                 </Grid>
-                <Grid item xs={4}>
-                    <IconButton className={classes.abc_position}>
-                    <DescriptionIcon className={classes.abc_icon}/>
-                    </IconButton>
-                </Grid>
-                <Grid item xs={4}>
-                    <IconButton className={classes.abc_position}>
-                    <CropOriginalIcon className={classes.abc_icon}/>
-                    </IconButton>
+                <Grid item xs={12} style={{fontWeight: 'bold'}}>
+                 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facere eveniet repellat voluptas totam eum aut earum labore voluptatibus commodi, pariatur neque nam quae, dolor, molestiae debitis id molestias aliquid tenetur.
                 </Grid>
             </Grid>
         </div>

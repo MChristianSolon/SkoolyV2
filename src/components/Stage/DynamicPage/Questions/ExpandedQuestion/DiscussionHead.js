@@ -14,7 +14,7 @@ function DiscussionHead({questionText, commenter}) {
             />
             </Grid>
             <Grid item xs={12}>
-                <h1 style={{marginLeft: '10%'}}>
+                <h1 style={{marginLeft: '5%'}}>
                 {questionText}
                 </h1>
             </Grid>

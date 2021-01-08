@@ -1,8 +1,14 @@
 .questions {
   margin: auto;
   height: 50vh;
+  overflow: auto;
+  white-space: nowrap;
 }
 
 .singleQuestion {
   height: 100%;
+}
+
+.answers_Arr {
+  overflow-y: scroll;
 }

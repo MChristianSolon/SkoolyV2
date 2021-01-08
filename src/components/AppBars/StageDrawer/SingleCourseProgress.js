@@ -16,7 +16,7 @@ function SingleCourseProgress({SubLessonTitle, percent}) {
     }, [percent])
 
     return (
-        <Grid container className="course_progress" spacing={2}>
+        <Grid container className="course_progress" spacing={2} style={SubLessonTitle === 'room' ?{display: 'none'} : {marginBottom: '10px'}}>
             <Grid item xs={12}> 
                 <center>
                 <h3 style={{color: '#616161'}}>{SubLessonTitle}</h3>

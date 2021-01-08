@@ -42,8 +42,9 @@ function LandingPage() {
         <Grid container spacing={4}>
             <Grid item xs={12}>
             <ButtonGroup>
-                 <Button href={`/stage/?host=${"CHRIS"}&room=${"123"}`} variant="contained" color="primary" size="large">Stage</Button>
-                 <Button href={`/create`} variant="contained" color="secondary" size="large">Create</Button>
+                 <Button href={`/stage/?host=${"CHRIS"}&room=${"123"}`} variant="outlined" color="primary" size="large">Stage</Button>
+                 <Button href={`/create`} variant="outlined" color="secondary" size="large">Create</Button>
+                 <Button href={`/profile`} variant="outlined" color="secondary" size="large">Profile</Button>
             </ButtonGroup>
             </Grid>
             <Grid item xs={12}>

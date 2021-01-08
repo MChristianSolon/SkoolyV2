@@ -1,12 +1,14 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Button, CircularProgress, Divider, Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import CreateSuccess from './_CreateSuccess';
 import LessonForm from './_LessonForm';
 import CourseForm from './_CourseForm';
+import QuizForm from './QuizForm';
 import user from '../Contexts/hardTeacher';
 import { db } from '../../Firebase/Firebase';
+import { Redirect } from 'react-router-dom';
 
 //styles
 export const useStyles = makeStyles(theme => ({
@@ -33,7 +35,9 @@ const infoFields = {
     lessons: [{
         lesson_name: 'New',
         description: '',
-        url: '' }],
+        url: '',
+        quizes: []
+    }],
 }
 
 const formReducer = (state, { index, field, value, method }) => {
@@ -43,8 +47,14 @@ const formReducer = (state, { index, field, value, method }) => {
         updatedLessons[index][field] = value; 
     else if(method === 'add')
         updatedLessons.push({ lesson: '', description: '', url: '' });
-    else
+    else if(method === 'delete')
         updatedLessons.splice(index, 1);
+    else if(method === 'modifyQuiz') {
+        const i = updatedLessons[index].quizes.findIndex(quiz => quiz.name === value.name);
+        updatedLessons[index].quizes[i] = value;
+    }
+    else
+        updatedLessons[index].quizes.push(value);
         
     return { ...state, lessons: updatedLessons}
 }
@@ -56,15 +66,22 @@ function CreatorStudio() {
     let [isNewCourse, setIsNewCourse] = useState(false);
     let [courseId, setCourseId] = useState('');
     let [success, setSuccess] = useState(false);
+    let [quizScreen, setQuizScreen] = useState({
+        status: false,
+        data: {},
+        callback: null
+    });
 
     //form handler
     let [formStates, dispatchForm] = useReducer(formReducer, infoFields);
 
         const handleForm = (event, index, method) => {
+            const value = event.target ? event.target.value : event;
+            const field = event.target ? event.target.name : null;
             dispatchForm({
                 index: index,
-                field: event ? event.target.name: null,
-                value: event ? event.target.value: null,
+                field: field,
+                value: value,
                 method: method || 'modify',
             });
         }
@@ -114,17 +131,19 @@ function CreatorStudio() {
                 
                 //continue
                 newCourse.SubLessons[form.lesson_name] = {
-                    room: uuidv4().substring(0,8),
                     lesson_name: form.lesson_name,
                     author: user.name,
                     description: form.description,
-                    video_url: form.url
+                    video_url: form.url,
+                    quizes: form.quizes
                 };
             });
 
+            let room = uuidv4().substring(0,18);
+
             //push to firebase
             setIsUploading(true);
-            db.collection('courses').add(newCourse)
+            db.collection('courses').doc(room).set(newCourse)
             .then(() => setIsUploading(false))
             .then(() => setSuccess(true));
             /* TODO update user info */
@@ -135,10 +154,10 @@ function CreatorStudio() {
             formStates.lessons.forEach((form) => {
                 //add [lesson] to firebase
                 subLessonsUpdate[`SubLessons.${form.lesson_name}`] = {
-                   room: uuidv4().substring(0,8),
                    lesson_name: form.lesson_name,
                    description: form.description,
-                   url: form.url
+                   url: form.url,
+                   quizes: form.quizes
                 }
             });
 
@@ -148,10 +167,17 @@ function CreatorStudio() {
             .then(() => setIsUploading(false))
             .then(() => setSuccess(true));
         }
-
     };
-    
-    return !success ? (
+
+    useEffect(() => {
+        console.log(formStates)
+    }, [formStates])
+
+    if(success)
+        return (<CreateSuccess username={user.name} courseId={courseId}/>)
+    else if (quizScreen.status)
+        return <QuizForm data={quizScreen.data} callback={quizScreen.callback}/>
+    return (
         <Grid container justify="center">
             <Grid item container xs={12} md={8}>
                 {/* title */}
@@ -188,7 +214,7 @@ function CreatorStudio() {
                             </Grid>
                         </Grid>
                         {formStates.lessons.map((info, index) => (
-                            <LessonForm key={index} index={index} data={formStates} handle={handleForm}/>
+                            <LessonForm key={index} index={index} data={info} handle={handleForm} setScreen={setQuizScreen}/>
                         ))}
                     </Grid>
                     <Grid item>
@@ -214,7 +240,7 @@ function CreatorStudio() {
             </Grid>
         </Grid>
     )
-    : (<CreateSuccess url={`skooly.com/courses?host=${user.name}&course=${courseId}`}/>);
+    // : (<CreateSuccess url={`skooly.com/courses?host=${user.name}&course=${courseId}`}/>);
 }
 
 export default CreatorStudio;

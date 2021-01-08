@@ -30,9 +30,9 @@ export default function RecipeReviewCard({currentSubLesson, globalCurrentTime, r
         <Grid item xs={12}>
             <form onSubmit={handleSubmitQuestion}>
               <Grid container spacing={1} alignItems="flex-end">
-              <Grid item>
-              <Avatar src={currentUser.photo} alt={currentUser.name} />
+              <Grid item md={2}>
               </Grid>
+              <Avatar src={currentUser.photo} alt={currentUser.name} />
               <Grid item md={8}>
               <TextField placeholder="Start a Discussion..." 
                 value={question} 
